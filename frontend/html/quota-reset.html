@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>配額重置 | Insight Monitor</title>
+    <link rel="stylesheet" href="/css/base.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+    <div class="app-container">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo"><i data-lucide="activity"></i><span>Insight Monitor</span></div>
+            </div>
+            <ul id="nav-list" class="nav-list"></ul>
+            <div class="sidebar-footer"><span class="status-dot"></span><span style="font-size:0.78rem;color:var(--text-dim)">監控系統</span></div>
+        </aside>
+        <main class="main-content">
+            <header class="page-header">
+                <h1 id="page-title">配額重置</h1>
+                <p id="page-subtitle">重置使用者當期 Token 配額，保留花費流水紀錄</p>
+            </header>
+            <div class="page-body">
+                <div class="card">
+                    <div class="card-title">查詢使用者</div>
+                    <div class="toolbar" id="toolbar"></div>
+                    <p style="font-size:0.82rem;color:var(--text-dim);margin-bottom:1rem">
+                        只重置 <code>user_usage_quotas.used_tokens</code>（配額計數器），不會刪除 <code>token_usage_logs</code> 的花費紀錄。每次重置會記錄一個區間，方便查看各期用量。
+                    </p>
+                </div>
+                <div id="quota-info"></div>
+                <div id="period-history"></div>
+            </div>
+        </main>
+    </div>
+    <script type="module" src="/js/pages/quota-reset.js"></script>
+</body>
+</html>

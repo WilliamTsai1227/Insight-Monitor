@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Token 用量 | Insight Monitor</title>
+    <link rel="stylesheet" href="/css/base.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+    <div class="app-container">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo"><i data-lucide="activity"></i><span>Insight Monitor</span></div>
+            </div>
+            <ul id="nav-list" class="nav-list"></ul>
+            <div class="sidebar-footer"><span class="status-dot"></span><span style="font-size:0.78rem;color:var(--text-dim)">監控系統</span></div>
+        </aside>
+        <main class="main-content">
+            <header class="page-header">
+                <h1 id="page-title">Token 用量</h1>
+                <p id="page-subtitle">各使用者、各模型的 Token 用量與花費統計</p>
+            </header>
+            <div class="page-body" id="page-content">
+                <div class="toolbar" id="toolbar"></div>
+                <div id="summary-section"></div>
+                <div id="user-detail-section"></div>
+                <div id="by-user-section"></div>
+            </div>
+        </main>
+    </div>
+    <script type="module" src="/js/pages/tokens.js"></script>
+</body>
+</html>

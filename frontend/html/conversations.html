@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>問答紀錄 | Insight Monitor</title>
+    <link rel="stylesheet" href="/css/base.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+    <div class="app-container">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo"><i data-lucide="activity"></i><span>Insight Monitor</span></div>
+            </div>
+            <ul id="nav-list" class="nav-list"></ul>
+            <div class="sidebar-footer"><span class="status-dot"></span><span style="font-size:0.78rem;color:var(--text-dim)">監控系統</span></div>
+        </aside>
+        <main class="main-content">
+            <header class="page-header">
+                <h1 id="page-title">問答紀錄</h1>
+                <p id="page-subtitle">搜尋使用者問答紀錄，查看完整對話</p>
+            </header>
+            <div class="page-body">
+                <div class="toolbar" id="toolbar"></div>
+                <div class="split-view">
+                    <div class="panel">
+                        <div class="panel-header">對話列表</div>
+                        <div class="panel-body" id="chat-list"></div>
+                    </div>
+                    <div class="panel">
+                        <div class="panel-header" id="chat-detail-title">對話內容</div>
+                        <div class="panel-body" id="chat-detail"></div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script type="module" src="/js/pages/conversations.js"></script>
+</body>
+</html>
