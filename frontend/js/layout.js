@@ -4,6 +4,7 @@ const NAV_ITEMS = [
     { href: '/html/conversations.html', icon: 'message-square', label: '問答紀錄' },
     { href: '/html/tokens.html', icon: 'coins', label: 'Token 用量' },
     { href: '/html/quota-reset.html', icon: 'refresh-cw', label: '配額重置' },
+    { href: '/html/feedback.html', icon: 'message-circle', label: '使用者回饋' },
     { href: '/html/errors.html', icon: 'alert-triangle', label: '系統報錯' },
     { href: '/html/logs.html', icon: 'scroll-text', label: '聊天 Log' },
     { href: '/html/qdrant.html', icon: 'database', label: 'Qdrant' },

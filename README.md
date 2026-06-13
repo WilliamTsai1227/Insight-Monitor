@@ -22,6 +22,7 @@ Insight-Monitor/
 | 問答紀錄 | `/html/conversations.html` | 搜尋使用者問答、查看完整對話 |
 | Token 用量 | `/html/tokens.html` | 各使用者/模型 Token 與花費 |
 | 配額重置 | `/html/quota-reset.html` | 重置使用者當期配額，保留花費流水 |
+| 使用者回饋 | `/html/feedback.html` | 檢視 `user_feedback` 完整回饋與工單狀態 |
 | 系統報錯 | `/html/errors.html` | 依使用者分組與全部錯誤列表 |
 | 聊天 Log | `/html/logs.html` | Tool 呼叫、Query Rewrite、關鍵字 |
 | Qdrant | `/html/qdrant.html` | Collection 筆數與時間範圍 |
@@ -229,6 +230,9 @@ docker compose -f deploy/docker-compose.yml up --build -d
 | GET | `/api/tokens/user/{id}` | 單一使用者用量 |
 | GET | `/api/quota/user/{id}` | 配額狀態與各區間用量 |
 | POST | `/api/quota/user/{id}/reset` | 重置配額計數（保留花費流水） |
+| GET | `/api/feedback` | 使用者回饋列表（可篩 status/category/user） |
+| GET | `/api/feedback/{id}` | 回饋詳情（含 context、user_agent） |
+| PATCH | `/api/feedback/{id}/status` | 更新工單狀態 |
 | GET | `/api/errors/by-user` | 錯誤依使用者分組 |
 | GET | `/api/errors/all` | 全部錯誤 |
 | GET | `/api/logs` | 聊天 Log 列表 |
