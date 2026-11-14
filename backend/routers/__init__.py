@@ -1,8 +1,9 @@
 from fastapi import APIRouter
 
-from routers import conversations, errors, feedback, logs, qdrant, quota, tokens, users
+from routers import conversations, errors, feedback, logs, qdrant, quota, tiers, tokens, users
 
 api_router = APIRouter()
+api_router.include_router(tiers.router)
 api_router.include_router(users.router)
 api_router.include_router(conversations.router)
 api_router.include_router(tokens.router)

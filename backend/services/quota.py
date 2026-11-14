@@ -34,7 +34,7 @@ async def get_user_quota_info(
     user = await db.fetchrow(
         """
         SELECT u.id, u.email, u.username, u.status,
-               st.name AS tier_name,
+               u.tier_id, st.name AS tier_name,
                COALESCE(st.monthly_token_limit, 200000) AS monthly_token_limit,
                uq.used_tokens, uq.current_period_start, uq.updated_at AS quota_updated_at
         FROM users u

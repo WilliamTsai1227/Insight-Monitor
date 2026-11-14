@@ -21,7 +21,7 @@ Insight-Monitor/
 | 使用者 | `/html/users.html` | 註冊使用者清單與詳細資訊 |
 | 問答紀錄 | `/html/conversations.html` | 搜尋使用者問答、查看完整對話 |
 | Token 用量 | `/html/tokens.html` | 各使用者/模型 Token 與花費 |
-| 配額重置 | `/html/quota-reset.html` | 重置使用者當期配額，保留花費流水 |
+| 配額管理 | `/html/quota-reset.html` | 重置使用者當期配額（保留花費流水）、變更訂閱方案、新增方案 |
 | 使用者回饋 | `/html/feedback.html` | 檢視 `user_feedback` 完整回饋與工單狀態 |
 | 系統報錯 | `/html/errors.html` | 依使用者分組與全部錯誤列表 |
 | 聊天 Log | `/html/logs.html` | Tool 呼叫、Query Rewrite、關鍵字 |
@@ -189,10 +189,29 @@ WHERE user_id = 'YOUR_USER_UUID'::uuid;
 
 ### Monitor UI
 
-- 頁面：`/html/quota-reset.html`（側欄「配額重置」）
+- 頁面：`/html/quota-reset.html`（側欄「配額管理」）
 - 可帶 query：`/html/quota-reset.html?user_id={uuid}`
 - `GET /api/quota/user/{uuid}` — 配額狀態＋區間歷史
 - `POST /api/quota/user/{uuid}/reset` — body 可選 `{ "note": "原因" }`
+
+## 變更使用者方案（tier_change_logs）
+
+每月上限來自 `subscription_tiers.monthly_token_limit`（經 `users.tier_id` 關聯；`tier_id` 為 NULL 時視同 free = 200,000）。Stock-Insight-Chat 每次請求即時查詢，因此變更方案**立即生效**。
+
+| 表 | 變更方案時 |
+|----|-----------|
+| `users` | 更新 `tier_id`、`updated_at` |
+| `user_usage_quotas` | **不動**（當期已用量保留；需要時另外執行配額重置） |
+| `tier_change_logs` | **寫入一筆**（含新舊方案名稱與上限快照、備註） |
+
+`tier_change_logs` 定義見 `backend/database/migrations/V002__tier_change_logs.sql`，首次呼叫相關 API 時也會自動 `CREATE TABLE IF NOT EXISTS`。
+
+**給某位使用者「無上限」**：在配額管理頁的「方案列表」新增方案（可按「填入極大值」，上限為 `9007199254740991`，即 JS 安全整數上限），再把使用者指派到該方案。`subscription_tiers` 與 Stock-Insight-Chat 共用；Chat 的 `init_db.sql` 種子只會 upsert free/pro/ultra，不影響自訂方案。
+
+- `GET /api/tiers` — 方案列表（含各方案使用者數）
+- `POST /api/tiers` — 新增方案 `{ "name", "monthly_token_limit", "max_projects" }`
+- `PUT /api/users/{uuid}/tier` — `{ "tier_id": "...", "note": "原因" }`
+- `GET /api/users/{uuid}/tier-changes` — 方案異動紀錄
 
 ## 本機開發
 
@@ -222,6 +241,10 @@ docker compose -f deploy/docker-compose.yml up --build -d
 | GET | `/api/health` | 健康檢查 |
 | GET | `/api/users` | 使用者列表 |
 | GET | `/api/users/{id}` | 使用者詳情 |
+| PUT | `/api/users/{id}/tier` | 變更使用者方案 |
+| GET | `/api/users/{id}/tier-changes` | 方案異動紀錄 |
+| GET | `/api/tiers` | 方案列表 |
+| POST | `/api/tiers` | 新增方案 |
 | GET | `/api/conversations/search` | 搜尋問答 |
 | GET | `/api/conversations/user/{id}/chats` | 使用者對話列表 |
 | GET | `/api/conversations/{chat_id}` | 對話訊息 |
@@ -247,3 +270,15 @@ docker compose -f deploy/docker-compose.yml up --build -d
 | PostgreSQL | 已實作 |
 | Qdrant | 已實作 |
 | MongoDB | 待實作 |
+
+## 團隊開發流程（Claude Code）
+
+專案內建 Claude Code skill：`.claude/skills/commit-push/`。在本專案目錄用 Claude Code 輸入：
+
+```
+/commit-push            # 或附上重點：/commit-push 新增方案變更功能
+```
+
+會依序執行：隱私／機密掃描（`scripts/scan_sensitive.sh` + 人工檢視 diff）→ commit → 分支檢查（detached HEAD、是否落後遠端、是否在 main 上需確認）→ push。發現機密會中止，不會 commit。
+
+腳本也可單獨執行：`bash .claude/skills/commit-push/scripts/scan_sensitive.sh`（0 = 乾淨、1 = 可疑需人工判斷、2 = 禁止提交）。
